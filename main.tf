@@ -23,7 +23,7 @@ resource "keycloak_openid_client_role_policy" "this" {
   type               = "role"
   logic              = "POSITIVE"
   decision_strategy  = "UNANIMOUS"
-  roles {
+  role {
     id       = keycloak_role.this[each.key].id
     required = false
   }
