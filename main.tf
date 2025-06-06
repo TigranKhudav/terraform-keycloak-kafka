@@ -39,10 +39,8 @@ resource "keycloak_openid_client_authorization_permission" "this" {
   policies           = [keycloak_openid_client_role_policy.this[each.key].id]
   resources          = [keycloak_openid_client_authorization_resource.this[each.key].id]
   scopes = [
-    keycloak_openid_client_authorization_scope.Describe.id,
-    each.key == "producer"
-      ? keycloak_openid_client_authorization_scope.Write.id
-      : keycloak_openid_client_authorization_scope.Read.id
+    "Describe",
+    each.key == "producer" ? "Write" : "Read"
   ]
   depends_on         = [keycloak_openid_client_authorization_resource.this, keycloak_openid_client_role_policy.this]
 }
