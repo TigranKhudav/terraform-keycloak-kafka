@@ -3,8 +3,8 @@ locals {
 }
 
 resource "keycloak_openid_client_authorization_resource" "this" {
-  realm_id            = keycloak_realm.internal.id
-  resource_server_id  = keycloak_openid_client.kafka.id
+  realm_id            = var.realm_id
+  resource_server_id  = var.client_id
   name                = "Topic:${var.topic_name}"
   scopes              = ["Write","Describe","Read"]
 }
@@ -12,13 +12,13 @@ resource "keycloak_openid_client_authorization_resource" "this" {
 resource "keycloak_role" "this" {
   for_each = toset(local.roles)
   name     = "${var.topic_name}-${each.key}"
-  realm_id = keycloak_realm.internal.id
+  realm_id = var.realm_id
 }
 
 resource "keycloak_openid_client_role_policy" "this" {
   for_each           = toset(local.roles)
-  realm_id           = keycloak_realm.internal.id
-  resource_server_id = keycloak_openid_client.kafka.id
+  realm_id           = var.realm_id
+  resource_server_id = var.client_id
   name               = "${var.topic_name}-${each.key}"
   type               = "role"
   logic              = "POSITIVE"
@@ -32,8 +32,8 @@ resource "keycloak_openid_client_role_policy" "this" {
 
 resource "keycloak_openid_client_authorization_permission" "this" {
   for_each           = toset(local.roles)
-  realm_id           = keycloak_realm.internal.id
-  resource_server_id = keycloak_openid_client.kafka.id
+  realm_id           = var.realm_id
+  resource_server_id = var.client_id
   name               = "${each.key}-${var.topic_name}"
   type               = "scope"
   policies           = [keycloak_openid_client_role_policy.this[each.key].id]
@@ -44,7 +44,5 @@ resource "keycloak_openid_client_authorization_permission" "this" {
       ? keycloak_openid_client_authorization_scope.Write.id
       : keycloak_openid_client_authorization_scope.Read.id
   ]
-  depends_on         = [
-    keycloak_openid_client_authorization_resource.this,
-    keycloak_openid_client_role_policy.this]
+  depends_on         = [keycloak_openid_client_authorization_resource.this, keycloak_openid_client_role_policy.this]
 }
