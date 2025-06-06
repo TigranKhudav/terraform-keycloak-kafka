@@ -37,7 +37,7 @@ resource "keycloak_openid_client_authorization_permission" "this" {
   name               = "${each.key}-${var.topic_name}"
   type               = "scope"
   policies           = [keycloak_openid_client_role_policy.this[each.key].id]
-  resources          = [keycloak_openid_client_authorization_resource.this[each.key].id]
+  resources          = [keycloak_openid_client_authorization_resource.this.id]
   scopes = [
     "Describe",
     each.key == "producer" ? "Write" : "Read"
