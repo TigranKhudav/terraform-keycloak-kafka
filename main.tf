@@ -27,7 +27,7 @@ resource "keycloak_openid_client_role_policy" "this" {
     id       = keycloak_role.this[each.key].id
     required = false
   }
-  depends_on      = [keycloak_role.this[each.key].id]
+  depends_on      = [keycloak_role.this]
 }
 
 resource "keycloak_openid_client_authorization_permission" "this" {
@@ -45,6 +45,6 @@ resource "keycloak_openid_client_authorization_permission" "this" {
       : keycloak_openid_client_authorization_scope.Read.id
   ]
   depends_on         = [
-    keycloak_openid_client_authorization_resource.this[each.key].id,
-    keycloak_openid_client_role_policy.this[each.key].id]
+    keycloak_openid_client_authorization_resource.this,
+    keycloak_openid_client_role_policy.this]
 }
