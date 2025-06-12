@@ -1,4 +1,8 @@
-# output "client_id" {
-#   value       = keycloak_openid_client.this.id
-#   description = "The ID of the S3 bucket"
-# }
+output "producer" {
+  value       = keycloak_role.this["producer"].name
+  description = "The ID of the S3 bucket"
+}
+output "consumer" {
+  value       = keycloak_role.this["consumer"].name
+  description = "The ID of the S3 bucket"
+}
