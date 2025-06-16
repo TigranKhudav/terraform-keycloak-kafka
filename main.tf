@@ -6,6 +6,7 @@ resource "keycloak_openid_client_authorization_resource" "this" {
   realm_id            = var.realm_id
   resource_server_id  = var.client_id
   name                = "Topic:${var.topic_name}"
+  display_name        = "Topic:${var.topic_name}"
   scopes              = ["Write","Describe","Read"]
   type                = "Topic"
 }
