@@ -32,13 +32,12 @@ resource "keycloak_openid_client_role_policy" "this" {
   depends_on      = [keycloak_role.this]
 }
 
-resource "keycloak_openid_client_authorization_permission" "this" {
-  for_each           = toset(["producer", "consumer"])
+resource "keycloak_openid_client_authorization_permission" "producer" {
   realm_id           = var.realm_id
   resource_server_id = var.client_id
-  name               = "${each.key}-${var.topic_name}"
+  name               = "producer-${var.topic_name}"
   type               = "scope"
-  policies           = [keycloak_openid_client_role_policy.this[each.key].id]
+  policies           = [keycloak_openid_client_role_policy.this["producer"].id]
   resources          = [keycloak_openid_client_authorization_resource.this.id]
   scopes             = var.scopes
   depends_on         = [keycloak_openid_client_authorization_resource.this, keycloak_openid_client_role_policy.this]
