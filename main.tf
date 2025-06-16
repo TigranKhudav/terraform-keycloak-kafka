@@ -7,7 +7,7 @@ resource "keycloak_openid_client_authorization_resource" "this" {
   resource_server_id  = var.client_id
   name                = "Topic:${var.topic_name}"
   display_name        = "Topic:${var.topic_name}"
-  scopes              = ["Write","Describe","Read"]
+  scopes              = var.scopes
   type                = "Topic"
 }
 
@@ -40,9 +40,6 @@ resource "keycloak_openid_client_authorization_permission" "this" {
   type               = "scope"
   policies           = [keycloak_openid_client_role_policy.this[each.key].id]
   resources          = [keycloak_openid_client_authorization_resource.this.id]
-  scopes = [
-    "Describe",
-    each.key == "producer" ? "Write" : "Read"
-  ]
+  scopes             = var.scopes
   depends_on         = [keycloak_openid_client_authorization_resource.this, keycloak_openid_client_role_policy.this]
 }
