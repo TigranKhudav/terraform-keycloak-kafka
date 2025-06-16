@@ -53,7 +53,7 @@ resource "keycloak_openid_client_authorization_permission" "producer" {
   policies           = [keycloak_openid_client_role_policy.producer.id]
   resources          = [keycloak_openid_client_authorization_resource.this.id]
   scopes             = var.scopes
-  depends_on         = [keycloak_openid_client_authorization_resource.this, keycloak_openid_client_role_policy.this]
+  depends_on         = [keycloak_openid_client_authorization_resource.this, keycloak_openid_client_role_policy.producer]
 }
 
 resource "keycloak_openid_client_authorization_permission" "consumer" {
@@ -64,5 +64,5 @@ resource "keycloak_openid_client_authorization_permission" "consumer" {
   policies           = [keycloak_openid_client_role_policy.consumer.id]
   resources          = [keycloak_openid_client_authorization_resource.this.id]
   scopes             = var.scopes
-  depends_on         = [keycloak_openid_client_authorization_resource.this, keycloak_openid_client_role_policy.this]
+  depends_on         = [keycloak_openid_client_authorization_resource.this, keycloak_openid_client_role_policy.consumer]
 }
